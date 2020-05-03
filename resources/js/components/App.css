@@ -1,0 +1,47 @@
+.switch-wrapper {
+    position: relative;
+}
+  
+.switch-wrapper > div {
+    position: absolute;
+}
+
+.fade-enter {
+    opacity: 0.01;
+}
+.fade-enter.fade-enter-active {
+    opacity: 1;
+    transition: opacity 300ms ease-in;
+}
+
+.fade-exit {
+    opacity: 1;
+}
+  
+.fade-exit.fade-exit-active {
+    opacity: 0.01;
+    transition: opacity 100ms ease-in;
+}
+
+.transition-group {
+    position: relative;
+    margin-top: 20px;
+}
+
+.route-section {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.absolute-position-container {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.loader-container {
+    height: 140px;
+}

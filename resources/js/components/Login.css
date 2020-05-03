@@ -1,0 +1,15 @@
+body {
+    /* background-color: #DADADA; */
+    background-color: white;
+}
+body > .grid {
+    height: 100%;
+}
+
+.ui.teal.login-header:first-child {
+    margin-top: 50px;
+}
+
+.login {
+    max-width: 450px;
+}
