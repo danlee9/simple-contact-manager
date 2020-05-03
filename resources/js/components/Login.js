@@ -75,7 +75,8 @@ class Login extends React.Component {
                         </div>
                     </form>
                     <div className="ui message">
-                        New to us? <Link to="/register">Sign Up</Link>
+                        {/* New to us? <Link to="/register">Sign Up</Link> */}
+                        New to us? <a to="/register">Sign Up</a>
                     </div>
                     <Transition visible={message.show} animation='fade' duration={300}>
                         <div className="wrapper-div-that-disappears">

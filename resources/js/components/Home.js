@@ -13,7 +13,7 @@ class Home extends React.Component {
             if (!this.props.loggedIn) {
                 let id = sessionStorage.getItem('id');
                 let token = sessionStorage.getItem('token');
-                this.props.setLoggedIn(id, token);
+                // this.props.setLoggedIn(id, token);
             }
         }
     }

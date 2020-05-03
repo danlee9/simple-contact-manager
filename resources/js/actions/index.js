@@ -130,6 +130,7 @@ export const trackButtonClick = email => async dispatch => {
     const token = sessionStorage.getItem('token');
     var url = `/api/click?api_token=${token}`;
     const res = await axios.post(url, { email });
+    console.log(res);
     dispatch({type: TRACK_BUTTON_CLICKED, payload: res.data});
 }
 
