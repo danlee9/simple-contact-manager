@@ -4,7 +4,6 @@ import { Transition } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 import { getContacts, showContactsLoading } from "../actions";
-import history from '../history';
 
 class Contacts extends React.Component {
     componentDidMount() {

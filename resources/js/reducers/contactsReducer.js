@@ -3,7 +3,9 @@ import {
     GET_CONTACTS,
     ADD_CONTACT,
     SHOW_CONTACTS_LOADING,
-    GET_CONTACT_ENTRY
+    GET_CONTACT_ENTRY,
+    IMPORT_CONTACTS_CSV,
+    IMPORTING_LOADING
 } from "../actions/types";
 
 const parsePageParameter = (url, path) => {
@@ -16,6 +18,7 @@ const INITIAL_STATE = {
     contacts: [],
     retrieved: false,
     currentContact: null,
+    importingLoading: false,
     // showTransactionModal: false,
     // transactionType: '',
     // transactionLoading: false,
@@ -49,6 +52,13 @@ export default (state = INITIAL_STATE, action) => {
         case GET_CONTACT_ENTRY:
             newState.currentContact = action.payload;
             newState.retrieved = true;
+            return newState;
+        case IMPORTING_LOADING:
+            newState.importingLoading = true;
+            return newState;
+        case IMPORT_CONTACTS_CSV:
+            newState.importingLoading = false;
+            newState.retrieved = false;
             return newState;
         // case OPEN_TRANSACTION_MODAL:
         //     return {

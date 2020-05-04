@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { register, showMessage, hideMessage } from "../actions";
 import { Link } from "react-router-dom";
 import history from '../history';
 import { Transition } from "semantic-ui-react";
@@ -6,16 +8,16 @@ import { Transition } from "semantic-ui-react";
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        if (sessionStorage.getItem('id')) {
-            history.push('/home');
-        }
+        // if (sessionStorage.getItem('id')) {
+        //     history.push('/home');
+        // }
         this.state = {
             name: '',
             email: '',
             password: '',
             password_confirmation: ''
         };
-        // this.props.hideMessage();
+        this.props.hideMessage();
     }
     
     onInputChange = e => {
@@ -25,7 +27,7 @@ class Register extends React.Component {
 
     submit = e => {
         e.preventDefault();
-        // this.props.hideMessage();
+        this.props.hideMessage();
         var arr = [];
         let { name, email, password, password_confirmation } = this.state;
         let inputs = { name, email, password, password_confirmation };
@@ -57,7 +59,7 @@ class Register extends React.Component {
     }
 
     hideMessage = () => {
-        // this.props.hideMessage();
+        this.props.hideMessage();
     }
 
     renderMsgItems(items) {
@@ -114,7 +116,7 @@ class Register extends React.Component {
                             </div>
                         </div>
                     </form>
-                    {/* <Transition visible={message.show} animation='fade' duration={300}>
+                    <Transition visible={message.show} animation='fade' duration={300}>
                         <div className="wrapper-div-that-disappears">
                             <div className={`ui ${message.type} message`} style={{marginTop: '1em'}}>
                                 <i className="close icon" onClick={this.hideMessage}></i>
@@ -124,11 +126,18 @@ class Register extends React.Component {
                                 {this.renderMsgItems(message.items)}
                             </div>
                         </div>
-                    </Transition> */}
+                    </Transition>
                 </div>
             </div>
         );
     }
 }
 
-export default Register;
+const mapStateToProps = state => {
+    return { 
+        message: state.modules.message,
+        formLoading: state.modules.formLoading
+    };
+};
+
+export default connect(mapStateToProps, { register, showMessage, hideMessage })(Register);

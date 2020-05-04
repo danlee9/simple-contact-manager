@@ -45,13 +45,13 @@ class ContactController extends Controller
             ]);
             $klaviyo = new Klaviyo(config('services.klaviyo.api_key'));
             $klaviyoData = [
+                '$id' => $contact->id,
                 '$first_name' => $contact->first_name,
                 '$last_name' => $contact->last_name,
                 '$email' => $contact->email,
                 '$phone_number' => $contact->phone
             ];
             $klaviyoStatus = $klaviyo->identify($klaviyoData);
-            // return response()->json(['success'=>true]);
             $contact->KlaviyoStatus = $klaviyoStatus;
             return json_encode($contact);
         }
@@ -77,6 +77,7 @@ class ContactController extends Controller
             $contact->save();
             $klaviyo = new Klaviyo(config('services.klaviyo.api_key'));
             $klaviyoData = [
+                '$id' => $contact->id,
                 '$first_name' => $contact->first_name,
                 '$last_name' => $contact->last_name,
                 '$email' => $contact->email,
@@ -88,6 +89,96 @@ class ContactController extends Controller
         }
 
         return response()->json(['error'=>$validator->errors()->all()]);
+    }
+
+    public function uploadFile(Request $request)
+    {
+        $file = $request->file('file');
+
+        // File Details 
+        $filename = $file->getClientOriginalName();
+        $extension = $file->getClientOriginalExtension();
+        $fileSize = $file->getSize();
+
+        // Valid File Extensions
+        $valid_extension = array("csv");
+
+        // 2MB in Bytes
+        $maxFileSize = 2097152; 
+
+        // Check file extension
+        if(in_array(strtolower($extension), $valid_extension)){
+
+            // Check file size
+            if($fileSize <= $maxFileSize){
+
+                // File upload location
+                $location = 'uploads';
+
+                // Upload file
+                $file->move($location,$filename);
+
+                // Import CSV to Database
+                $filepath = public_path($location."/".$filename);
+
+                // Reading file
+                $file = fopen($filepath,"r");
+
+                $importData_arr = array();
+                $i = 0;
+
+                while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                    $num = count($filedata );
+                    
+                    // Skip first row (Remove below comment if you want to skip the first row)
+                    if($i == 0){
+                        $i++;
+                        continue; 
+                    }
+                    for ($c=0; $c < $num; $c++) {
+                        $importData_arr[$i][] = $filedata [$c];
+                    }
+                    $i++;
+                }
+                fclose($file);
+                $userId = auth()->id();
+
+                $klaviyoSyncSuccess = true;
+
+                // Insert to MySQL database
+                foreach($importData_arr as $importData){
+
+                    $contact = Contact::create([
+                        'user_id' => $userId,
+                        'first_name' => $importData[0],
+                        'last_name' => $importData[1],
+                        'email' => $importData[2],
+                        'phone' => $importData[3]
+                    ]);
+
+                    $klaviyo = new Klaviyo(config('services.klaviyo.api_key'));
+                    $klaviyoData = [
+                        '$id' => $contact->id,
+                        '$first_name' => $contact->first_name,
+                        '$last_name' => $contact->last_name,
+                        '$email' => $contact->email,
+                        '$phone_number' => $contact->phone
+                    ];
+                    $klaviyoResult = $klaviyo->identify($klaviyoData);
+                    if ($klaviyoSyncSuccess)
+                        $klaviyoSyncSuccess = $klaviyoResult;
+                }
+
+                $status = 'Import Successful.';
+            } else {
+                $status = 'File too large. File must be less than 2MB.';
+            }
+
+        } else {
+            $status = 'Invalid File Extension.';
+        }
+        $res = ['status' => $status, 'klaviyoSyncStatus' => $klaviyoSyncSuccess];
+        return json_encode($res);
     }
 
     /**

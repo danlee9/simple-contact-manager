@@ -23,3 +23,4 @@ Route::middleware('auth:api')->post('contacts', 'ContactController@store');
 Route::middleware('auth:api')->get('contact/{id}', 'ContactController@show');
 Route::middleware('auth:api')->post('contact/{id}', 'ContactController@update');
 Route::middleware('auth:api')->post('click', 'ClickController@track');
+Route::middleware('auth:api')->post('contacts/uploadFile', 'ContactController@uploadFile');

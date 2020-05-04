@@ -7,7 +7,6 @@ import { Transition } from "semantic-ui-react";
 class ContactForm extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
         if (props.first_name) {
             this.state = {
                 first_name: props.first_name,
@@ -48,8 +47,6 @@ class ContactForm extends React.Component {
             });
             return this.props.showMessage('error', 'Required Fields', arr);
         }
-        console.log('hellllooooo')
-        console.log(this.state);
         let { contact } = this.props;
         if (this.props.formName == 'Add Contact')
             this.props.addContact(inputs);

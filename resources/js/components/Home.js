@@ -1,20 +1,14 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { logOut, fetchUserInfo, trackButtonClick } from "../actions";
+import { logOut, fetchUserInfo, trackButtonClick, importContactsCSV, importingLoading } from "../actions";
 import { Link } from "react-router-dom";
-import history from '../history';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        if (!sessionStorage.getItem('id')) {
-            history.push('/');
-        } else {
-            if (!this.props.loggedIn) {
-                let id = sessionStorage.getItem('id');
-                let token = sessionStorage.getItem('token');
-                // this.props.setLoggedIn(id, token);
-            }
+        this.state ={
+            file: null,
+            loading: false
         }
     }
 
@@ -30,8 +24,21 @@ class Home extends React.Component {
         this.props.openTransactionModal(type);
     }
 
+    onChange = e => {
+        this.setState({file: e.target.files[0]});
+    }
+
+    onFormSubmit = e => {
+        e.preventDefault() // Stop form submit
+        let file = this.state.file;
+        this.props.importContactsCSV(file);
+    }
+
     // className="ui center aligned grid"
     render() {
+        const { loading, trackLoading } = this.props;
+        const trackingDisplay = trackLoading ? 'visible' : 'hidden';
+        const importingDisplay = loading ? 'visible' : 'hidden';
         return (
             <div className="ui centered grid">
                 <div className="ten wide center aligned column" style={{marginTop: '20px'}}>
@@ -42,6 +49,16 @@ class Home extends React.Component {
                         </div>
                         <br/>
                         <button className="ui button green" onClick={() => this.props.trackButtonClick(this.props.email)}>Click to Track</button>
+                        <br/>
+                        <span style={{visibility: trackingDisplay}}>Loading...</span>
+                        <br/>
+                        <h3>Import Contacts CSV file</h3>
+                        <form onSubmit={this.onFormSubmit}>
+                            <input className="ui tiny button grey" type='file' name='file' onChange={this.onChange} />
+                            <input className="ui tiny button black" type='submit' name='submit' value='Import' />
+                            <br/>
+                            <span style={{visibility: importingDisplay}}>Loading...</span>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -54,11 +71,13 @@ const mapStateToProps = state => {
         loggedIn: state.auth.loggedIn,
         token: state.auth.token,
         name: state.user.name,
-        email: state.user.email
+        email: state.user.email,
+        loading: state.contacts.importingLoading,
+        trackLoading: state.user.trackLoading
     };
 };
 
 export default connect(
     mapStateToProps,
-    { logOut, fetchUserInfo, trackButtonClick }
+    { logOut, fetchUserInfo, trackButtonClick, importContactsCSV, importingLoading }
 )(Home);

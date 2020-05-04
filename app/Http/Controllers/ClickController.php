@@ -10,9 +10,12 @@ class ClickController extends Controller
     public function track()
     {
         $klaviyo = new Klaviyo(config('services.klaviyo.api_key'));
+        $time = time();
         return $klaviyo->track(
             'Button Clicked',
-            array('$email' => request('email'))
+            array('$email' => request('email')),
+            null,
+            $time
         );
     }
 }

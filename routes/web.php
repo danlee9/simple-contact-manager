@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 /*
 | Landing Page
 */
+Auth::routes();
+
 Route::get('/', function () {
     return view('welcome');
 })->name('login')->middleware('guest');
@@ -27,8 +29,6 @@ Route::get('login', function () {
 Route::get('register', function () {
     return view('welcome');
 })->middleware('guest');
-
-Auth::routes();
 
 /*
 | All other urls will be handled by react router
@@ -50,5 +50,9 @@ Route::get('contacts/create', function () {
 })->middleware('auth');
 
 Route::get('contacts/entry/{contact}', function () {
+    return view('welcome');
+})->middleware('auth');
+
+Route::get('contacts/entry/{contact}/edit', function () {
     return view('welcome');
 })->middleware('auth');

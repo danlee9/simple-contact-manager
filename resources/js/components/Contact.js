@@ -4,7 +4,6 @@ import { Transition } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 import { getContactEntry, showContactsLoading } from "../actions";
-import history from '../history';
 
 class Contact extends React.Component {
     componentDidMount() {
@@ -16,7 +15,6 @@ class Contact extends React.Component {
     }
 
     render() {
-        console.log(this.props);
         let { contact } = this.props.match.params;
         const { currentContact, retrieved } = this.props;
         return (
