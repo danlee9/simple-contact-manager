@@ -8,9 +8,6 @@ import { Transition } from "semantic-ui-react";
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        // if (sessionStorage.getItem('id')) {
-        //     history.push('/home');
-        // }
         this.state = {
             name: '',
             email: '',
